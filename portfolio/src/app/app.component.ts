@@ -1,13 +1,13 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { NavComponent } from './components/nav/nav.component';
 
 @Component({
   selector: 'km-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, NavComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styles: [],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent {
-  title = 'portfolio';
-}
+export class AppComponent {}
