@@ -15,7 +15,6 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
         align-items: center;
         padding-inline: var(--space-xl);
         height: var(--nav-height);
-        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
 
         &__left {
           display: flex;
