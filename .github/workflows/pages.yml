@@ -1,6 +1,7 @@
 name: Build and Deploy Github Pages
 
 env:
+    artifactName: githubPage
     srcDirectory: portfolio
     outputDirectory: portfolio/dist/portfolio
 
@@ -19,13 +20,11 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v4
 
-            - name: Cache node_modules
-              uses: actions/cache@v4
+            - name: Set up Node
+              uses: actions/setup-node@v3
               with:
-                  path: 'cartinx.client/node_modules'
-                  key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-                  restore-keys: |
-                    ${{ runner.os }}-node-
+                  node-version: 18
+                  cache: 'npm'
 
             - name: Install Dependencies
               run: |
@@ -36,15 +35,15 @@ jobs:
               run: |
                 cd ${{ env.srcDirectory }}
                 npm run build
-                
+
             - name: Upload artifacts
               uses: actions/upload-artifact@v4
               with:
-                name: githubPage
-                path: ${{ env.outputDirectory }}
-                if-no-files-found: error
-                retention-days: 5
-                compression-level: 6
+                  name: ${{ env.githubPage }}
+                  path: ${{ env.outputDirectory }}
+                  if-no-files-found: error
+                  retention-days: 5
+                  compression-level: 6
 
     deploy:
         runs-on: ubuntu-latest
@@ -53,15 +52,15 @@ jobs:
             - name: Download artifacts
               uses: actions/download-artifact@v4
               with:
+                  name: ${{ env.githubPage }}
                   merge-multiple: true
-            - name: Display structure of downloaded files
-              run: ls -R path/to/artifacts
-#
-#            - name: Fix permissions
-#              run: |
-#                  chmod -c -R +rX "docs/" | while read line; do
-#                    echo "::warning title=Invalid file permissions automatically fixed::$line"
-#                  done
-#            - name: Upload Pages artifact
-#              uses: actions/upload-pages-artifact@v2
 
+            - name: Display structure of downloaded files
+              run: ls -R
+
+            permissions:
+                pages: write
+                id-token: write
+#
+#            - name: Setup Pages
+#              uses: actions/configure-pages@v3
