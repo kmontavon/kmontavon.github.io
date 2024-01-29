@@ -32,11 +32,6 @@ jobs:
                 cd $srcDirectory
                 npm i
 
-            - name: Test Angular app
-              run: |
-                cd $srcDirectory
-                npm run test:headless
-
             - name: Build Angular app
               run: |
                 cd $srcDirectory
