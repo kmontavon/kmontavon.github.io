@@ -49,6 +49,9 @@ jobs:
   deploy:
     needs: [build]
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Download artifacts
@@ -57,18 +60,15 @@ jobs:
           name: ${{ env.artifactName }}
           merge-multiple: true
 
-      - name: Display structure of downloaded files
-        run: ls -R
-
       - name: Setup Pages
         uses: actions/configure-pages@v3
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v3
         with:
           # Upload dist repository
-          path: "./githubPage"
+          path: "./"
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v3
