@@ -1,7 +1,7 @@
 name: Build and Deploy Github Pages
 
 env:
-  artifactName: githubPage
+  artifactName: github-page
   srcDirectory: portfolio
   outputDirectory: portfolio/dist/portfolio
 
@@ -82,4 +82,4 @@ jobs:
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v3
+        uses: actions/deploy-pages@v4
