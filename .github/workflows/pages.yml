@@ -1,0 +1,58 @@
+name: Build and Deploy Github Pages
+
+env:
+    srcDirectory: portfolio
+    relativeOutputDirectory: dist/portfolio
+
+# Only run workflow on pushes to develop or main branches and tags
+on:
+    push:
+        branches: [main, dev]
+    pull_request:
+        branches: [main, dev]
+
+jobs:
+    build_test:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Cache node_modules
+              uses: actions/cache@v4
+              with:
+                  path: 'cartinx.client/node_modules'
+                  key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+                  restore-keys: |
+                  ${{ runner.os }}-node-
+
+            - name: Install Dependencies
+              run: |
+                cd $srcDirectory
+                npm i
+
+            - name: Test Angular app
+              run: |
+                cd $srcDirectory
+                npm run test:headless
+
+            - name: Build Angular app
+              run: |
+                cd $srcDirectory
+                npm run build
+                
+#            - uses: actions/upload-artifact@master
+#              with:
+#                name: page
+#                path: $srcDirectory + ""
+#                if-no-files-found: error
+#
+#            - name: Fix permissions
+#              run: |
+#                  chmod -c -R +rX "docs/" | while read line; do
+#                    echo "::warning title=Invalid file permissions automatically fixed::$line"
+#                  done
+#            - name: Upload Pages artifact
+#              uses: actions/upload-pages-artifact@v2
+
