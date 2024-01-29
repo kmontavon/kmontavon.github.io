@@ -2,7 +2,7 @@ name: Build and Deploy Github Pages
 
 env:
     srcDirectory: portfolio
-    relativeOutputDirectory: dist/portfolio
+    outputDirectory: portfolio/dist/portfolio
 
 # Only run workflow on pushes to develop or main branches and tags
 on:
@@ -12,7 +12,7 @@ on:
         branches: [main, dev]
 
 jobs:
-    build_test:
+    build:
         runs-on: ubuntu-latest
 
         steps:
@@ -29,19 +29,33 @@ jobs:
 
             - name: Install Dependencies
               run: |
-                cd $srcDirectory
+                cd ${{ env.srcDirectory }}
                 npm i
 
             - name: Build Angular app
               run: |
-                cd $srcDirectory
+                cd ${{ env.srcDirectory }}
                 npm run build
                 
-#            - uses: actions/upload-artifact@master
-#              with:
-#                name: page
-#                path: $srcDirectory + ""
-#                if-no-files-found: error
+            - name: Upload artifacts
+              uses: actions/upload-artifact@v4
+              with:
+                name: githubPage
+                path: ${{ env.outputDirectory }}
+                if-no-files-found: error
+                retention-days: 5
+                compression-level: 6
+
+    deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Download artifacts
+              uses: actions/download-artifact@v4
+              with:
+                  merge-multiple: true
+            - name: Display structure of downloaded files
+              run: ls -R path/to/artifacts
 #
 #            - name: Fix permissions
 #              run: |
