@@ -1,66 +1,72 @@
 name: Build and Deploy Github Pages
 
 env:
-    artifactName: githubPage
-    srcDirectory: portfolio
-    outputDirectory: portfolio/dist/portfolio
+  artifactName: githubPage
+  srcDirectory: portfolio
+  outputDirectory: portfolio/dist/portfolio
 
 # Only run workflow on pushes to develop or main branches and tags
 on:
-    push:
-        branches: [main, dev]
-    pull_request:
-        branches: [main, dev]
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-latest
 
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-            - name: Set up Node
-              uses: actions/setup-node@v3
-              with:
-                  node-version: 18
-                  cache: 'npm'
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "npm"
 
-            - name: Install Dependencies
-              run: |
-                cd ${{ env.srcDirectory }}
-                npm i
+      - name: Install Dependencies
+        run: |
+          cd ${{ env.srcDirectory }}
+          npm i
 
-            - name: Build Angular app
-              run: |
-                cd ${{ env.srcDirectory }}
-                npm run build
+      - name: Build Angular app
+        run: |
+          cd ${{ env.srcDirectory }}
+          npm run build
 
-            - name: Upload artifacts
-              uses: actions/upload-artifact@v4
-              with:
-                  name: ${{ env.githubPage }}
-                  path: ${{ env.outputDirectory }}
-                  if-no-files-found: error
-                  retention-days: 5
-                  compression-level: 6
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.artifactName }}
+          path: ${{ env.outputDirectory }}
+          if-no-files-found: error
+          retention-days: 5
+          compression-level: 6
 
-    deploy:
-        runs-on: ubuntu-latest
+  deploy:
+    runs-on: ubuntu-latest
 
-        steps:
-            - name: Download artifacts
-              uses: actions/download-artifact@v4
-              with:
-                  name: ${{ env.githubPage }}
-                  merge-multiple: true
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.artifactName }}
+          merge-multiple: true
 
-            - name: Display structure of downloaded files
-              run: ls -R
+      - name: Display structure of downloaded files
+        run: ls -R
 
-            permissions:
-                pages: write
-                id-token: write
-#
-#            - name: Setup Pages
-#              uses: actions/configure-pages@v3
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          # Upload dist repository
+          path: "./githubPage"
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
