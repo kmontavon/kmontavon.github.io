@@ -4,6 +4,12 @@ export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    loadComponent: () => import('./pages/header-page/header-page.component').then(m => m.HeaderPageComponent),
+    title: 'Kevin Montavon - Home',
+    loadComponent: () => import('./pages/home-page/home-page.component').then(m => m.HomePageComponent),
+  },
+  {
+    path: 'about',
+    title: 'Kevin Montavon - About',
+    loadComponent: () => import('./pages/about-page/about-page.component').then(m => m.AboutPageComponent),
   },
 ];

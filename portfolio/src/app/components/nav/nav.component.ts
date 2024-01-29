@@ -16,6 +16,10 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
         padding-inline: var(--space-xl);
         height: var(--nav-height);
 
+        &__logo {
+          font-size: 1.4rem;
+        }
+
         &__left {
           display: flex;
           justify-content: center;

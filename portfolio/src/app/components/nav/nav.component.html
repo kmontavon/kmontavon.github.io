@@ -4,7 +4,8 @@
   </div>
   <div class="nav__left">
     <div class="nav__links">
-      <a class="nav__link" routerLink="/" routerLinkActive="nav__link--active">Home</a>
+      <a class="nav__link" routerLink="/" [routerLinkActiveOptions]="{exact: true}"
+         routerLinkActive="nav__link--active">Home</a>
       <a class="nav__link" routerLink="/about" routerLinkActive="nav__link--active">About</a>
       <a class="nav__link" routerLink="/portfolio" routerLinkActive="nav__link--active">Portfolio</a>
     </div>
